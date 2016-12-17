@@ -74,7 +74,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=['flask', 'flask-sqlalchemy', 'google-api-python-client',
-                      'oauth2client'],
+                      'oauth2client', 'httplib2', 'uritemplate'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
