@@ -7,6 +7,8 @@ import json
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
 
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
 
 def get_article(arxiv_id):
     if not arxiv_id:
@@ -67,7 +69,7 @@ def list_comments():
     article = get_article(arxiv_id)
     comments = [{'comment': c.comment,
                  'username': c.user.username,
-                 'created_at': c.created_at} for c in article.comments]
+                 'created_at': c.created_at.strftime(DATE_FORMAT)} for c in article.comments]
     return jsonify({'success' : True, 'comments': comments})
 
 
