@@ -12,6 +12,7 @@ class User(db.Model):
     google_user = db.relationship('GoogleUser', backref='user',
                                   uselist=False)
 
+
 class GoogleUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     google_id = db.Column(db.String(30), unique=True)

@@ -1,13 +1,14 @@
-import flask
-import httplib2
-import json
+from flask import session, render_template, request
 
-from conspire import app
+from conspire import app, csrf_protect
 from conspire.models import db, User, GoogleUser
-from apiclient import discovery
-from oauth2client import client
+from conspire.auth import google
 
 from sqlalchemy.orm.exc import NoResultFound
+
+import re
+
+EMAIL_REGEXP = re.compile(r'[^@]+@[^@]+\.[^@]+')
 
 @app.route('/')
 def index():
@@ -16,48 +17,34 @@ def index():
 
 @app.route('/signup')
 def signup():
-    return 'Hello, world!'
+    print session['user_tmp_data']
+    return render_template("register.html", tmp_user = session['user_tmp_data'])
 
 
-@app.route('/login')
-def login():
-    if 'credentials' not in flask.session:
-        return flask.redirect(flask.url_for('oauth2callback'))
-
-    credentials = client.OAuth2Credentials.from_json(flask.session['credentials'])
-    if credentials.access_token_expired:
-        return flask.redirect(flask.url_for('oauth2callback'))
-    else:
-        http_auth = credentials.authorize(httplib2.Http())
-        userinfo_service = discovery.build('oauth2', 'v2', http_auth)
-        userinfo = userinfo_service.userinfo().get().execute()
-
-        if any(k not in userinfo for k in ('id', 'email', 'name')):
-            flask.session['credentials'] = None
-            return flask.redirect(flask.url_for('login'))
-
-        try:
-            g_user = GoogleUser.query.filter_by(google_id=userinfo['id']).one()
-            flask.session['user'] = g_user.user
-        except NoResultFound as e:
-            flask.session['user_tmp_data'] = userinfo
-            flask.session['user_type'] = 'google'
-            return flask.redirect(flask.url_for('signup'))
-
-        return json.dumps(files)
+def register_google(username, email):
+    user = User()
+    google_user = GoogleUser()
+    user.username = username
+    user.email = email
+    google_user.google_id = session['user_tmp_data']['google_id']
+    user.google_user = google_user
+    db.session.add(user)
+    db.session.add(google_user)
+    db.session.commit()
+    session['user_id'] = user.id
 
 
-@app.route('/login-google')
-def login_google():
-    flow = client.flow_from_clientsecrets(
-        'client_secrets.json',
-        scope='openid profile email',
-        redirect_uri=flask.url_for('login_google', _external=True))
-    if 'code' not in flask.request.args:
-        auth_uri = flow.step1_get_authorize_url()
-        return flask.redirect(auth_uri)
-    else:
-        auth_code = flask.request.args.get('code')
-        credentials = flow.step2_exchange(auth_code)
-        flask.session['credentials'] = credentials.to_json()
-        return flask.redirect(flask.url_for('login'))
+@app.route('/register', methods=["POST"])
+def register():
+    csrf_protect()
+    username = request.form['username']
+    email = request.form['email']
+    if any(c in username for c in ',\'\"<>\\&%!') or\
+       not EMAIL_REGEXP.match(email):
+        return flask.redirect(flask.url_for('signup'))
+
+    if session['user_type'] == "google":
+        register_google(username, email)
+
+    return render_template('registered.html', username=username)
+
