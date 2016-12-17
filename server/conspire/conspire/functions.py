@@ -7,6 +7,8 @@ import json
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
 
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
 
 def get_article(arxiv_id):
     if not arxiv_id:
@@ -29,6 +31,9 @@ def get_article(arxiv_id):
 
 @app.route('/userinfo')
 def userinfo():
+    if not 'user_id' in session:
+        return jsonify({'success': False})
+
     try:
         user = User.query.filter_by(id=session['user_id']).one()
         return jsonify({'success': True, 'id': user.id, 'name': user.username, 'email': user.email})
@@ -42,7 +47,7 @@ def list_reactions():
     articles = [get_article(a) for a in request.json['arxiv_ids']]
     reactions = {}
     for a in articles:
-        result = {'reactions': [], 'myself': ''}
+        result = {'reactions': [], 'myself': '', 'comment_size': len(a.comments)}
         for r in a.reactions:
             result['reactions'].append(r.reaction)
             if r.user_id == session['user_id']:
@@ -60,18 +65,21 @@ def list_comment_sizes():
     return jsonify({'success' : True, 'comment_sizes': comment_sizes})
 
 
-@app.route('/list/comments/<arxiv_id>')
+@app.route('/get/comments', methods=["POST"])
 @login_required
-def list_comments(arxiv_id):
+def list_comments():
+    arxiv_id = request.json['arxiv_id']
     article = get_article(arxiv_id)
     comments = [{'comment': c.comment,
-                 'username': c.user.username} for c in article.comments]
+                 'username': c.user.username,
+                 'created_at': c.created_at.strftime(DATE_FORMAT)} for c in article.comments]
     return jsonify({'success' : True, 'comments': comments})
 
 
-@app.route('/list/reactions/<arxiv_id>')
+@app.route('/get/reactions', methods=["POST"])
 @login_required
-def list_reactions_single(arxiv_id):
+def list_reactions_single():
+    arxiv_id = request.json['arxiv_id']
     article = get_article(arxiv_id)
     reactions = []
     myself = ''

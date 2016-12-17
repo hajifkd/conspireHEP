@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from conspire import app
+import datetime
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.sqlite3'
 db = SQLAlchemy(app)
@@ -34,7 +35,7 @@ class Reaction(db.Model):
     article_id = db.Column(db.Integer, db.ForeignKey('article.id'))
 
     reaction_list = ['like', 'dislike', 'read_later']
-    reaction = db.Column(db.Enum(*reaction_list))
+    reaction = db.Column(db.Enum(*reaction_list), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
@@ -43,4 +44,5 @@ class Comment(db.Model):
     article_id = db.Column(db.Integer, db.ForeignKey('article.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comment = db.Column(db.Text)
+    created_at = db.Column(db.Date, default=datetime.datetime.now)
 
