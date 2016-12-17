@@ -1,8 +1,9 @@
 from flask import session, render_template, request
 
-from conspire import app, csrf_protect
+from conspire import app, csrf_protect, login_required
 from conspire.models import db, User, GoogleUser
 from conspire.auth import google
+import conspire.functions
 
 from sqlalchemy.orm.exc import NoResultFound
 

@@ -29,7 +29,7 @@ def login_google():
         try:
             g_user = GoogleUser.query.filter_by(google_id=userinfo['id']).one()
             flask.session['user_id'] = g_user.user.id
-        except NoResultFound as e:
+        except NoResultFound:
             flask.session['user_tmp_data'] = {
                                                'google_id': userinfo['id'],
                                                'email': userinfo['email'],
