@@ -60,18 +60,21 @@ def list_comment_sizes():
     return jsonify({'success' : True, 'comment_sizes': comment_sizes})
 
 
-@app.route('/list/comments/<arxiv_id>')
+@app.route('/get/comments', methods=["POST"])
 @login_required
-def list_comments(arxiv_id):
+def list_comments():
+    arxiv_id = request.json['arxiv_id']
     article = get_article(arxiv_id)
     comments = [{'comment': c.comment,
-                 'username': c.user.username} for c in article.comments]
+                 'username': c.user.username,
+                 'created_at': c.created_at} for c in article.comments]
     return jsonify({'success' : True, 'comments': comments})
 
 
-@app.route('/list/reactions/<arxiv_id>')
+@app.route('/get/reactions', methods=["POST"])
 @login_required
-def list_reactions_single(arxiv_id):
+def list_reactions_single():
+    arxiv_id = request.json['arxiv_id']
     article = get_article(arxiv_id)
     reactions = []
     myself = ''
