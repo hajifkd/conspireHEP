@@ -31,6 +31,9 @@ def get_article(arxiv_id):
 
 @app.route('/userinfo')
 def userinfo():
+    if not 'user_id' in session:
+        return jsonify({'success': False})
+
     try:
         user = User.query.filter_by(id=session['user_id']).one()
         return jsonify({'success': True, 'id': user.id, 'name': user.username, 'email': user.email})
@@ -44,7 +47,7 @@ def list_reactions():
     articles = [get_article(a) for a in request.json['arxiv_ids']]
     reactions = {}
     for a in articles:
-        result = {'reactions': [], 'myself': ''}
+        result = {'reactions': [], 'myself': '', 'comment_size': len(a.comments)}
         for r in a.reactions:
             result['reactions'].append(r.reaction)
             if r.user_id == session['user_id']:

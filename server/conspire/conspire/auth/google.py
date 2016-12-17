@@ -38,7 +38,7 @@ def login_google():
             flask.session['user_type'] = 'google'
             return flask.redirect(flask.url_for('signup'))
 
-        return 'aaaa'
+        return 'Login was successful. Please reload the page.'
 
 
 @app.route('/oauth-google')
