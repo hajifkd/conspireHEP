@@ -28,26 +28,36 @@ def get_article(arxiv_id):
 
 
 @app.route('/userinfo')
-@login_required
 def userinfo():
-    user = User.query.filter_by(id=session['user_id']).one()
-    return jsonify({'id': user.id, 'name': user.username, 'email': user.email})
+    try:
+        user = User.query.filter_by(id=session['user_id']).one()
+        return jsonify({'success': True, 'id': user.id, 'name': user.username, 'email': user.email})
+    except NoResultFound:
+        return jsonify({'success': False})
 
 
-@app.route('/list/reactions')
+@app.route('/list/reactions', methods=["POST"])
 @login_required
 def list_reactions():
     articles = [get_article(a) for a in request.json['arxiv_ids']]
-    reactions = {a.arxiv_id: [r.reaction for r in a.reactions] for a in articles}
-    return jsonify({'sucess' : True, 'reactions': reactions})
+    reactions = {}
+    for a in articles:
+        result = {'reactions': [], 'myself': ''}
+        for r in a.reactions:
+            result['reactions'].append(r.reaction)
+            if r.user_id == session['user_id']:
+                result['myself'] = r.reaction
+        reactions[a.arxiv_id] = result
+
+    return jsonify({'success' : True, 'reactions': reactions})
 
 
-@app.route('/list/comment_sizes')
+@app.route('/list/comment_sizes', methods=["POST"])
 @login_required
 def list_comment_sizes():
     articles = [get_article(a) for a in request.json['arxiv_ids']]
     comment_sizes = {a.arxiv_id: len(a.comments) for a in articles}
-    return jsonify({'sucess' : True, 'comment_sizes': comment_sizes})
+    return jsonify({'success' : True, 'comment_sizes': comment_sizes})
 
 
 @app.route('/list/comments/<arxiv_id>')
@@ -56,18 +66,25 @@ def list_comments(arxiv_id):
     article = get_article(arxiv_id)
     comments = [{'comment': c.comment,
                  'username': c.user.username} for c in article.comments]
-    return jsonify({'sucess' : True, 'comments': comments})
+    return jsonify({'success' : True, 'comments': comments})
 
 
 @app.route('/list/reactions/<arxiv_id>')
 @login_required
 def list_reactions_single(arxiv_id):
     article = get_article(arxiv_id)
-    reactions = [r.reaction for r in article.reaction]
-    return jsonify({'sucess' : True, 'reactions': reactions})
+    reactions = []
+    myself = ''
+
+    for r in article.reactions:
+        reactions.append(r.reaction)
+        if r.user_id == session['user_id']:
+            myself = r.reaction
+
+    return jsonify({'success' : True, 'reactions': reactions, 'myself': myself})
 
 
-@app.route('/add/reaction')
+@app.route('/add/reaction', methods=["POST"])
 @login_required
 def add_reaction():
     article = get_article(request.json['arxiv_id'])
@@ -86,10 +103,10 @@ def add_reaction():
 
     db.session.commit()
 
-    return jsonify({'sucess' : True})
+    return jsonify({'success' : True})
 
 
-@app.route('/add/comment')
+@app.route('/add/comment', methods=["POST"])
 @login_required
 def add_comment():
     article = get_article(request.json['arxiv_id'])
@@ -103,4 +120,4 @@ def add_comment():
     db.session.add(c)
     db.session.commit()
 
-    return jsonify({'sucess' : True})
+    return jsonify({'success' : True})
