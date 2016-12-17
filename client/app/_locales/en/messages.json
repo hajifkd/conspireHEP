@@ -1,0 +1,18 @@
+{
+  "appName": {
+    "message": "conspire",
+    "description": "The name of the application"
+  },
+  "appShortName": {
+    "message": "conspire",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
+  "appDescription": {
+    "message": "An arXiv extension",
+    "description": "The description of the application"
+  },
+  "browserActionTitle": {
+    "message": "conspire",
+    "description": "The title of the browser action button"
+  }
+}

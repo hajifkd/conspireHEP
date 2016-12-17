@@ -1,0 +1,8 @@
+.emoji-disabled {
+  filter: grayscale(1.0);
+}
+
+.emoji {
+  cursor: pointer;
+  user-select: none;
+}
