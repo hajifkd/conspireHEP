@@ -1,8 +1,56 @@
 .emoji-disabled {
-  filter: grayscale(1.0);
+  filter: grayscale(1.0) opacity(20%);
+}
+
+.emoji-disabled:hover {
+  filter: grayscale(0) opacity(80%);
 }
 
 .emoji {
   cursor: pointer;
   user-select: none;
+}
+
+span.comment_size {
+  margin-left: 5px;
+}
+
+span.num_count {
+  display: inline-block;
+  min-width: 20px;
+}
+
+.commentbox {
+  font-size: 90%;
+  margin: 0 0 30px 20px;
+}
+
+.commentbox .ctitle {
+  font-style: italic;
+}
+
+div.comments {
+  margin-bottom: 20px;
+  margin-left: 10px;
+}
+
+span.created_at {
+  color: dimgray;
+  margin-right: 10px;
+}
+
+span.comment_id {
+  color: darkblue;
+}
+
+div.comment_text {
+  font-size: 130%;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+div.comment_text pre {
+  font-family: inherit!important;
+  margin: 0 0 0 0;
 }

@@ -2,15 +2,17 @@ import $ from 'jquery';
 import { URL_BASE } from './config';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ReactionButtonGroup, CHOISES } from './ReactionButtonGroup';
+import { ReactionButtonGroup } from './ReactionButtonGroup';
+import { _start } from './util';
+
 
 const ABS_REGEXP = new RegExp('^http.*/abs/(.+)$');
+
 
 function main() {
   let headers = $('dt > span.list-identifier');
   let urls = headers.find('a:first-child').map((_, a) => a.href);
   let arxiv_ids = $.makeArray(urls.map((_, u) => u.match(ABS_REGEXP)[1]));
-
   chrome.runtime.sendMessage({
     message: 'AJAX',
     request: {
@@ -27,23 +29,14 @@ function main() {
       let div = $("<div style='display: inline'>");
       jqDom.after(div).after('&nbsp;');
 
-      let numbers = {};
-
-      for (let k of CHOISES) {
-        numbers[k] = 0;
-      }
-
-      for (let k of p.reactions[arxiv_id].reactions) {
-        if (!numbers[k]) numbers[k] = 1;
-        else numbers[k]++;
-      }
-
       ReactDOM.render(<ReactionButtonGroup
-                          numbers={numbers}
+                          reactions={p.reactions[arxiv_id].reactions}
                           myself={p.reactions[arxiv_id].myself}
                           arxivId={arxiv_id} />, div[0]);
+      
+      div.after(`<span class="comment_size">💬${p.reactions[arxiv_id].comment_size}</span>`)
     }
   });
 }
 
-$(main);
+$(_start.bind(undefined, main));

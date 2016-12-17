@@ -50,6 +50,9 @@
       "js": [
         "scripts/absPages.js"
       ],
+      "css": [
+        "styles/extension.css"
+      ],
       "run_at": "document_end",
       "all_frames": false
     }

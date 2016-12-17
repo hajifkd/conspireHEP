@@ -12,7 +12,7 @@ export class ReactionButton extends React.Component {
           onClick={this.props.onClick}>
           {this.props.emoji}
         </span>
-        <span>
+        <span className="num_count">
           {this.props.number}
         </span>
       </span>

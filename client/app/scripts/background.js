@@ -1,12 +1,13 @@
 import $ from 'jquery';
-import BASE_URL from './config';
+import { URL_BASE } from './config';
 
 let loggedin = false;
 let userinfo = {};
 
 // TODO: time check
 function checkIfLoggedin(callback) {
-  $.get(BASE_URL + 'userinfo').then(d => {
+  console.log(URL_BASE);
+  $.get(`${URL_BASE}userinfo`).then(d => {
     if (d.success) {
       loggedin = true;
       userinfo = d;

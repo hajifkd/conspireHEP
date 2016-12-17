@@ -2,20 +2,28 @@ import React from 'react';
 import { ReactionButton } from './ReactionButton';
 import { URL_BASE } from './config';
 
-const emoji = ["👍", "👎"];
-export const CHOISES = ["like", "dislike"];
+const emoji = ["👍", "👎", "🔖"];
+export const choises = ["like", "dislike", "read_later"];
 
 export class ReactionButtonGroup extends React.Component {
   constructor(props) {
     super(props);
+    let numbers = choises.map(_ => 0);
+
+    for (let v of props.reactions) {
+      let index = choises.indexOf(v);
+      if (index < 0) continue;
+      numbers[index]++;
+    }
+
     this.state = {
-      numbers: CHOISES.map(k => props.numbers[k]),
-      myself: CHOISES.indexOf(props.myself)
+      numbers: numbers,
+      myself: choises.indexOf(props.myself)
     };
   }
 
   onClick(i) {
-    let reaction = this.state.myself == i ? '' : CHOISES[i];
+    let reaction = this.state.myself == i ? '' : choises[i];
     
     chrome.runtime.sendMessage({
       message: 'AJAX',
@@ -55,9 +63,6 @@ export class ReactionButtonGroup extends React.Component {
     return (
       <span>
         {this.state.numbers.map((n, i) => {
-          console.log(this.state);
-          console.log(i);
-          console.log(this.state.myself);
           return (<ReactionButton emoji={emoji[i]}
             clicked={this.state.myself == i}
             number={n}
