@@ -31,7 +31,7 @@ class Article(db.Model):
 
 class Reaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    arxiv_id = db.Column(db.Integer, db.ForeignKey('article.id'))
+    article_id = db.Column(db.Integer, db.ForeignKey('article.id'))
 
     reaction_list = ['like', 'dislike', 'read_later']
     reaction = db.Column(db.Enum(*reaction_list))
@@ -40,7 +40,7 @@ class Reaction(db.Model):
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    arxiv_id = db.Column(db.Integer, db.ForeignKey('article.id'))
+    article_id = db.Column(db.Integer, db.ForeignKey('article.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comment = db.Column(db.Text)
 

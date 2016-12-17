@@ -93,12 +93,16 @@ def add_reaction():
         abort(403)
 
     try:
-        r = Reaction.query.filter_by(arxiv_id=arxiv_id, user_id=user_id).one()
-        r.reaction = reaction
+        r = Reaction.query.filter_by(article=article, user_id=session['user_id']).one()
+        if reaction:
+            r.reaction = reaction
+        else:
+            db.session.delete(r)
     except NoResultFound:
         r = Reaction()
         r.user_id = session['user_id']
         r.reaction = reaction
+        r.article = article
         db.session.add(r)
 
     db.session.commit()
@@ -117,6 +121,7 @@ def add_comment():
     c = Comment()
     c.user_id = session['user_id']
     c.comment = comment
+    c.article = article
     db.session.add(c)
     db.session.commit()
 
