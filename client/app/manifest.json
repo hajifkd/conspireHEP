@@ -16,8 +16,7 @@
   },
   "permissions": [
     "tabs",
-    "http://member.ipmu.jp/hajime.fukuda/c/conspire/*",
-    "http://localhost:5000/*"
+    "http://member.ipmu.jp/hajime.fukuda/c/conspire/*"
   ],
   "content_scripts": [
     {
