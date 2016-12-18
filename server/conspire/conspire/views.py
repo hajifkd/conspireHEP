@@ -3,6 +3,7 @@ from flask import session, render_template, request
 from conspire import app, csrf_protect, login_required
 from conspire.models import db, User, GoogleUser
 from conspire.auth import google
+from conspire.config import URL_PREFIX
 import conspire.functions
 
 from sqlalchemy.orm.exc import NoResultFound
@@ -42,7 +43,7 @@ def register():
     email = request.form['email']
     if any(c in username for c in ',\'\"<>\\&%!') or\
        not EMAIL_REGEXP.match(email):
-        return flask.redirect(flask.url_for('signup'))
+        return flask.redirect(URL_PREFIX + flask.url_for('signup'))
 
     if session['user_type'] == "google":
         register_google(username, email)

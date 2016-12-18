@@ -1,3 +1,2 @@
-GOOGLE_CLIENT_ID = '1060014061465-5940j64us12t0lir2767bjrndlhm4hr2.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = 'wPOtiL1819ECzw8rOqF1zQ9B'
-
+URL_PREFIX = ''
+REDIRECT_URL = "http://localhost:5000/oauth-google"
