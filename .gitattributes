@@ -1,0 +1,2 @@
+client/app/scripts/config.js merge=ours
+server/conspire/conspire/config.py merge=ours
