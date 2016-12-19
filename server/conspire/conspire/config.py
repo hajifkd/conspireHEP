@@ -1,2 +1,2 @@
-URL_PREFIX = ''
-REDIRECT_URL = "http://localhost:5000/oauth-google"
+URL_PREFIX = '/hajime.fukuda/c/conspire'
+REDIRECT_URL = "http://member.ipmu.jp/hajime.fukuda/c/conspire/oauth-google"
