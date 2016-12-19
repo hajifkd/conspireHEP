@@ -2,7 +2,7 @@
   "name": "__MSG_appName__",
   "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "manifest_version": 2,
   "default_locale": "en",
   "icons": {
@@ -16,20 +16,15 @@
   },
   "permissions": [
     "tabs",
-    "http://*/*",
-    "https://*/*"
+    "http://member.ipmu.jp/hajime.fukuda/c/conspire/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "http://arxiv.org/list/*/recent",
-        "http://xxx.lanl.gov/list/*/recent",
-        "https://arxiv.org/list/*/recent",
-        "https://xxx.lanl.gov/list/*/recent",
-        "http://arxiv.org/list/*/new",
-        "http://xxx.lanl.gov/list/*/new",
-        "https://arxiv.org/list/*/new",
-        "https://xxx.lanl.gov/list/*/new"
+        "http://arxiv.org/list/*",
+        "http://xxx.lanl.gov/list/*",
+        "https://arxiv.org/list/*",
+        "https://xxx.lanl.gov/list/*"
       ],
       "js": [
         "scripts/listPages.js"

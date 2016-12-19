@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ReactionButtonGroup } from './ReactionButtonGroup';
 import { CommentsField } from './CommentsField';
-import { _start } from './util';
+import { _start } from './utils';
 
 const ABS_REGEXP = new RegExp('^http.*/abs/(.+)$');
 
