@@ -3,7 +3,7 @@ import { URL_BASE } from './config';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ReactionButtonGroup } from './ReactionButtonGroup';
-import { _start } from './util';
+import { _start } from './utils';
 
 
 const ABS_REGEXP = new RegExp('^http.*/abs/(.+)$');
